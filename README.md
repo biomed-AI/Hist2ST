@@ -64,7 +64,7 @@ See [tutorial.ipynb](tutorial.ipynb)
 All Trained models of our method on HER2+ and cSCC datasets can be found at [synapse](https://www.synapse.org/#!Synapse:syn29738084/files/)
 
 
-## Citation
+# Citation
 
 Please cite our paper:
 
@@ -79,7 +79,3 @@ Please cite our paper:
 }
 
 ```
-
-
-# Acknowledgement
-The code is partly adapted from [HisToGene](https://github.com/maxpmx/HisToGene)
