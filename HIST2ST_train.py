@@ -11,7 +11,6 @@ from torch.utils.data import DataLoader
 from pytorch_lightning.loggers import TensorBoardLogger
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--r', type=int, default=4, help='224//r.')
 parser.add_argument('--gpu', type=int, default=2, help='gpu.')
 parser.add_argument('--fold', type=int, default=5, help='dataset fold.')
 parser.add_argument('--seed', type=int, default=12000, help='random seed.')
@@ -19,7 +18,7 @@ parser.add_argument('--save', type=int, default=0, help='save top k model.')
 parser.add_argument('--epochs', type=int, default=350, help='number of epochs.')
 parser.add_argument('--val', type=str, default='T', help='introduce valset.')
 parser.add_argument('--name', type=str, default='shi2rna_nobake', help='prefix name.')
-parser.add_argument('--data', type=str, default='her2st', help='dataset name:{"her2st","skin"}.')
+parser.add_argument('--data', type=str, default='her2st', help='dataset name:{"her2st","cscc"}.')
 parser.add_argument('--logger', type=str, default='../logs/my_logs', help='logger path.')
 parser.add_argument('--lr', type=float, default=1e-5, help='learning rate.')
 parser.add_argument('--dropout', type=float, default=0.2, help='dropout.')
@@ -47,9 +46,9 @@ torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 kernel,patch,depth1,depth2,depth3,heads,channel=map(lambda x:int(x),args.tag.split('-'))
 
-trainset = pk_load(args.fold,'train',False,args.data,neighs=args.neighbor, prune=args.prune,r=args.r)
+trainset = pk_load(args.fold,'train',False,args.data,neighs=args.neighbor, prune=args.prune)
 train_loader = DataLoader(trainset, batch_size=1, num_workers=0, shuffle=True)
-testset = pk_load(args.fold,'test',False,args.data,neighs=args.neighbor, prune=args.prune,r=args.r)
+testset = pk_load(args.fold,'test',False,args.data,neighs=args.neighbor, prune=args.prune)
 test_loader = DataLoader(testset, batch_size=1, num_workers=0, shuffle=False)
 label=None
 if args.fold in [5,11,17,23,26,30] and args.data=='her2st':
@@ -57,8 +56,8 @@ if args.fold in [5,11,17,23,26,30] and args.data=='her2st':
 v=testset if args.val=='T' else None
 
 genes=785
-if args.data=='skin':
-    args.name+='_skin'
+if args.data=='cscc':
+    args.name+='_cscc'
     genes=171
 
 log_name=''
@@ -86,7 +85,7 @@ print(log_name)
 model = Hist2ST(
     depth1=depth1, depth2=depth2, depth3=depth3,
     n_genes=genes, learning_rate=args.lr, val=v, label=label, 
-    kernel_size=kernel, patch_size=patch,fig_size=448//args.r,
+    kernel_size=kernel, patch_size=patch,
     heads=heads, channel=channel, dropout=args.dropout,
     zinb=args.zinb, nb=args.nb=='T',
     bake=args.bake, lamb=args.lamb, 
@@ -99,8 +98,8 @@ trainer = pl.Trainer(
 )
 
 trainer.fit(model, train_loader, test_loader)
-torch.save(model.state_dict(),f"./model/{args.fold}-Hist2ST{'_skin' if args.data=='skin' else ''}.ckpt")
-# model.load_state_dict(torch.load(f'./model/{args.fold}-Hist2ST{'_skin' if args.data=='skin' else ''}.ckpt'),)
+torch.save(model.state_dict(),f"./model/{args.fold}-Hist2ST{'_cscc' if args.data=='cscc' else ''}.ckpt")
+# model.load_state_dict(torch.load(f"./model/{args.fold}-Hist2ST{'_cscc' if args.data=='cscc' else ''}.ckpt"),)
 pred, gt = test(model, test_loader,'cuda')
 R=get_R(pred,gt)[0]
 print('Pearson Correlation:',np.nanmean(R))
