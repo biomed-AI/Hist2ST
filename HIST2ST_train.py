@@ -11,31 +11,37 @@ from torch.utils.data import DataLoader
 from pytorch_lightning.loggers import TensorBoardLogger
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--gpu', type=int, default=2, help='gpu.')
+parser.add_argument('--gpu', type=int, default=2, help='the id of gpu.')
 parser.add_argument('--fold', type=int, default=5, help='dataset fold.')
 parser.add_argument('--seed', type=int, default=12000, help='random seed.')
 parser.add_argument('--save', type=int, default=0, help='save top k model.')
 parser.add_argument('--epochs', type=int, default=350, help='number of epochs.')
 parser.add_argument('--val', type=str, default='T', help='introduce valset.')
-parser.add_argument('--name', type=str, default='shi2rna_nobake', help='prefix name.')
+parser.add_argument('--name', type=str, default='hist2ST', help='prefix name.')
 parser.add_argument('--data', type=str, default='her2st', help='dataset name:{"her2st","cscc"}.')
 parser.add_argument('--logger', type=str, default='../logs/my_logs', help='logger path.')
 parser.add_argument('--lr', type=float, default=1e-5, help='learning rate.')
 parser.add_argument('--dropout', type=float, default=0.2, help='dropout.')
 
-parser.add_argument('--bake', type=int, default=5, help='bake images num.')
-parser.add_argument('--lamb', type=float, default=0.5, help='bake loss coef.')
+parser.add_argument('--bake', type=int, default=5, help='the number of augmented images.')
+parser.add_argument('--lamb', type=float, default=0.5, help='the loss coef of self-distillation.')
 
 
 parser.add_argument('--nb', type=str, default='F', help='zinb or nb loss.')
-parser.add_argument('--zinb', type=float, default=0.25, help='zinb loss coef.')
+parser.add_argument('--zinb', type=float, default=0.25, help='the loss coef of zinb.')
 
 parser.add_argument('--prune', type=str, default='Grid', help='prune the edge')
-parser.add_argument('--policy', type=str, default='mean', help='graphscc params.')
-parser.add_argument('--neighbor', type=int, default=4, help='node neighbor num.')
+parser.add_argument('--policy', type=str, default='mean', help='the aggregation way in the GNN .')
+parser.add_argument('--neighbor', type=int, default=4, help='the number of neighbors in the GNN.')
 
 parser.add_argument('--tag', type=str, default='5-7-2-8-4-16-32', 
-                    help='hyper params: kernel-patch-depth1-depth2-depth3-heads-channel')
+                    help='hyper params: kernel-patch-depth1-depth2-depth3-heads-channel,'
+                         'depth1-depth2-depth3 are the depth of Convmixer, Multi-head layer in Transformer, and GNN, respectively'
+                         'patch is the value of kernel_size and stride in the path embedding layer of Convmixer'
+                         'kernel is the kernel_size in the depthwise of Convmixer module'
+                         'heads are the number of attention heads in the Multi-head layer'
+                         'channel is the value of the input and output channel of depthwise and pointwise. ')
+
 args = parser.parse_args()
 random.seed(args.seed)
 np.random.seed(args.seed)
