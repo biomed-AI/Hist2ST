@@ -58,13 +58,13 @@ See [tutorial.ipynb](tutorial.ipynb)
 
 NOTE: Run the following command if you want to run the script tutorial.ipynb
  
- Please run the script `download.sh` in the folder [data](https://github.com/biomed-AI/Hist2ST/tree/main/data) 
+1.  Please run the script `download.sh` in the folder [data](https://github.com/biomed-AI/Hist2ST/tree/main/data) 
 
 or 
 
 Run the command line `git clone https://github.com/almaan/her2st.git` in the dir [data](https://github.com/biomed-AI/Hist2ST/tree/main/data) 
 
-
+2. Run `gunzip *.gz` in the dir `Hist2ST/data/her2st/data/ST-cnts/` to unzip the gz files
 
 
 # Datasets
