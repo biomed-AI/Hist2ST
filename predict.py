@@ -15,7 +15,7 @@ def pk_load(fold,mode='train',flatten=False,dataset='her2st',r=4,ori=True,adj=Tr
             train=(mode=='train'),fold=fold,flatten=flatten,
             ori=ori,neighs=neighs,adj=adj,prune=prune,r=r
         )
-    elif dataset=='skin':
+    elif dataset=='cscc':
         dataset = ViT_SKIN(
             train=(mode=='train'),fold=fold,flatten=flatten,
             ori=ori,neighs=neighs,adj=adj,prune=prune,r=r
