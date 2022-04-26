@@ -47,11 +47,24 @@ Required package:
 - PyTorch >= 1.10
 - pytorch-lightning >= 1.4
 - scanpy >= 1.8
-
+- python >=3.7
+- tensorboard
 
 
 # Hist2ST pipeline
+
 See [tutorial.ipynb](tutorial.ipynb)
+
+
+NOTE: Run the following command if you want to run the script tutorial.ipynb
+ 
+ Please run the script `download.sh` in the folder [data](https://github.com/biomed-AI/Hist2ST/tree/main/data) 
+
+or 
+
+Run the command line `git clone https://github.com/almaan/her2st.git` in the dir [data](https://github.com/biomed-AI/Hist2ST/tree/main/data) 
+
+
 
 
 # Datasets
