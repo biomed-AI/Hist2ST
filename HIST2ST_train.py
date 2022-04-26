@@ -15,7 +15,6 @@ parser.add_argument('--gpu', type=int, default=2, help='the id of gpu.')
 parser.add_argument('--fold', type=int, default=5, help='dataset fold.')
 parser.add_argument('--seed', type=int, default=12000, help='random seed.')
 parser.add_argument('--epochs', type=int, default=350, help='number of epochs.')
-parser.add_argument('--val', type=str, default='T', help='introduce valset.')
 parser.add_argument('--name', type=str, default='hist2ST', help='prefix name.')
 parser.add_argument('--data', type=str, default='her2st', help='dataset name:{"her2st","cscc"}.')
 parser.add_argument('--logger', type=str, default='../logs/my_logs', help='logger path.')
@@ -58,7 +57,6 @@ test_loader = DataLoader(testset, batch_size=1, num_workers=0, shuffle=False)
 label=None
 if args.fold in [5,11,17,23,26,30] and args.data=='her2st':
     label=testset.label[testset.names[0]]
-v=testset if args.val=='T' else None
 
 genes=785
 if args.data=='cscc':
@@ -84,7 +82,7 @@ print(log_name)
 
 model = Hist2ST(
     depth1=depth1, depth2=depth2, depth3=depth3,
-    n_genes=genes, learning_rate=args.lr, val=v, label=label, 
+    n_genes=genes, learning_rate=args.lr, label=label, 
     kernel_size=kernel, patch_size=patch,
     heads=heads, channel=channel, dropout=args.dropout,
     zinb=args.zinb, nb=args.nb=='T',
