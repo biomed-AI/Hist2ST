@@ -83,7 +83,7 @@ class ViT(nn.Module):
         return x
 
 class Hist2ST(pl.LightningModule):
-    def __init__(self,val=None, learning_rate=1e-5, fig_size=112, label=None, 
+    def __init__(self, learning_rate=1e-5, fig_size=112, label=None, 
                  dropout=0.2, n_pos=64, kernel_size=5, patch_size=7, n_genes=785, 
                  depth1=2, depth2=8, depth3=4, heads=16, channel=32, 
                  zinb=0, nb=False, bake=0, lamb=0, policy='mean', 
@@ -91,7 +91,6 @@ class Hist2ST(pl.LightningModule):
         super().__init__()
         # self.save_hyperparameters()
         dim=(fig_size//patch_size)**2*channel//8
-        self.val=None
         self.learning_rate = learning_rate
         
         self.nb=nb
@@ -100,10 +99,7 @@ class Hist2ST(pl.LightningModule):
         self.bake=bake
         self.lamb=lamb
         
-        if val is not None:
-            self.label=label
-            self.val=DataLoader(val, batch_size=1, num_workers=4, shuffle=False)
-            self.valpatch, self.valct, self.valexp, self.valadj, self.valori, self.valsfs, *_=iter(self.val).next()
+        self.label=label
         self.patch_embedding = nn.Conv2d(3,channel,patch_size,patch_size)
         self.x_embed = nn.Embedding(n_pos,dim)
         self.y_embed = nn.Embedding(n_pos,dim)
