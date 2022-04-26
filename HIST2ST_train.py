@@ -14,7 +14,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=2, help='the id of gpu.')
 parser.add_argument('--fold', type=int, default=5, help='dataset fold.')
 parser.add_argument('--seed', type=int, default=12000, help='random seed.')
-parser.add_argument('--save', type=int, default=0, help='save top k model.')
 parser.add_argument('--epochs', type=int, default=350, help='number of epochs.')
 parser.add_argument('--val', type=str, default='T', help='introduce valset.')
 parser.add_argument('--name', type=str, default='hist2ST', help='prefix name.')
@@ -30,7 +29,7 @@ parser.add_argument('--lamb', type=float, default=0.5, help='the loss coef of se
 parser.add_argument('--nb', type=str, default='F', help='zinb or nb loss.')
 parser.add_argument('--zinb', type=float, default=0.25, help='the loss coef of zinb.')
 
-parser.add_argument('--prune', type=str, default='Grid', help='prune the edge')
+parser.add_argument('--prune', type=str, default='Grid', help='how to prune the edge:{"Grid","NA"}')
 parser.add_argument('--policy', type=str, default='mean', help='the aggregation way in the GNN .')
 parser.add_argument('--neighbor', type=int, default=4, help='the number of neighbors in the GNN.')
 
@@ -81,11 +80,6 @@ logger = TensorBoardLogger(
     args.logger, 
     name=log_name
 )
-
-if args.save>0:
-    checkpoint_callback = [pl.callbacks.ModelCheckpoint(monitor='R',save_top_k=args.save,mode='max')]
-else:
-    checkpoint_callback = None
 print(log_name)
 
 model = Hist2ST(
@@ -100,7 +94,6 @@ model = Hist2ST(
 trainer = pl.Trainer(
     gpus=[args.gpu], max_epochs=args.epochs,
     logger=logger,check_val_every_n_epoch=2,
-    callbacks=checkpoint_callback
 )
 
 trainer.fit(model, train_loader, test_loader)
